@@ -1,0 +1,65 @@
+const express = require('express')
+const { v4: uuid } = require('uuid')
+
+const server = express()
+
+server.use(express.json())
+
+const produtos = []
+
+
+server.get('/produtos', (req, res) => {
+  return res.send(produtos)
+})
+
+server.post('/produtos', (req, res) => {
+  const dados = req.body
+
+  produtos.push({
+    id: uuid(),
+    ...dados,
+  })
+
+  return res.json({ mensagem: 'Produto cadastrado com sucesso!' })
+})
+
+server.put('/produtos/:id', (req, res) => {
+  const id_prodrutos = req.params.id
+  const dados = req.body
+
+  const produtosIndex = produtos.findIndex((produtos) => {
+    return produtos.id === id_produtos
+  })
+
+  if (produtosIndex === -1) {
+    return res.send({ mensagem: 'Produto não encontrado' })
+  }
+
+  produtos[produtosIndex] = {
+    id: id_prodrutos,
+    ...dados,
+  }
+
+  return res.status(200).send({ mensagem: 'Produto atualizado com sucesso' })
+})
+
+server.delete("/produtos/:id",(req, res) => {
+  const id_produtos = req.params.id
+
+const produtosIndex = produtosfindIndex((produtos) => {
+  return produtos.id === id_produtos
+}) 
+
+ if (produtosIndex === -1){
+   return res.send({memsagem: "Produto não encontrado"})
+
+} 
+
+produtos.splice(produtosIndex, 1) 
+
+  return res.json({mensagem:"Produto apagado com sucesso!" }) 
+})    
+
+server.listen (3000, () => {
+  console.log('Server rodando na porta 3000')
+})
